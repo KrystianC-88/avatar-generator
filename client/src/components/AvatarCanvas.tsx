@@ -1,13 +1,17 @@
-import React, {useRef} from 'react'
+import React, {useEffect, useRef} from 'react'
 
 function AvatarCanvas(){
 
-    const canvasRef = useRef();
+    const canvasRef = useRef<HTMLCanvasElement>();
     
+    useEffect(()=>{
+        const context = canvasRef.current.getContext
+    },[])
+
 
     return(
         <>
-            <canvas />
+            <canvas ref={canvasRef}/>
         </>
     )
 }
