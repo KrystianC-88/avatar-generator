@@ -1,10 +1,8 @@
 import { Router, Request, Response } from 'express';
 import AvatarModel from '../../models/AvatarModel'
-import generateUUID from '../../utility/UUIDgenerator';
-
 
 class GeneratorController {
-  public path = '/avatar';
+  public path = '/avatar/';
   public router = Router();
 
   constructor() {
@@ -12,16 +10,18 @@ class GeneratorController {
   }
  
   public intializeRoutes() {
-    this.router.get(`${this.path}/:id`, this.getAvatar);
+    this.router.get(this.path, this.getPart);
     // this.router.post(this.path, this.createAPost);
   }
   
-  private getAvatar = async (request: Request, response: Response) =>{
-    const {id} = request.params;
-    const avatar = await AvatarModel.find({uuid: id})
+  private getPart = async (request: Request, response: Response) =>{
+    const {avatarID} = request.body;
+    const avatar = await AvatarModel.find({uuid: avatarID})
+    if(avatar){
+      return response.json(avatar);
+    }
     
   }
-
 }
  
 export default GeneratorController;

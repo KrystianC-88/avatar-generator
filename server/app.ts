@@ -1,22 +1,60 @@
 import express, { Application, Express, Request, Response } from 'express';
+import mongoose from 'mongoose'
 import bodyParser from 'body-parser';
+
+import dotenv from 'dotenv';
+
+dotenv.config({ path: '../.env' });
 
 class App {
     public app: Application;
     public port: number;
 
-    constructor(controllers: any[], port: number){
+    constructor(controllers: any[]) {
         this.app = express();
-        this.port = port;
+        // @ts-ignore
+        this.port = parseInt(process.env.SERVER_PORT);
 
+        this.connectToDatabase();
+        this.initalizeMiddlewares();
         this.initalizeControllers(controllers);
     }
 
-    private initalizeControllers(controllers: any[]){
-        controllers.forEach((controller: any) =>{
-            this.app.use('/', controller.route)            
-        })        
+    private initalizeControllers(controllers: any[]) {
+        controllers.forEach((controller: any) => {
+            this.app.use('/', controller.router)
+        })
     }
+
+    private initalizeMiddlewares() {
+        this.app.use(bodyParser.json())
+    }
+
+    private async connectToDatabase() {
+        const {
+            MONGO_USER,
+            MONGO_PASSWORD,
+            MONGO_PATH,
+        } = process.env;
+        
+        await mongoose.connect(`mongodb://${MONGO_USER}:${MONGO_PASSWORD}@127.0.0.1:27018/${MONGO_PATH}`).then(() => console.log("MongoDB connected"));
+    }
+
+    public listen() {
+        this.app.listen(this.port, () => console.log(`Server started on port ${this.port}`))
+    }
+
 }
 
 export default App;
+
+// TODO \/ better db connection
+// const {
+//     MONGO_USER,
+//     MONGO_PASSWORD,
+//     MONGO_PATH,
+//   } = process.env;
+
+// console.log(MONGO_USER);
+// console.log(MONGO_PASSWORD);
+// console.log(MONGO_PATH);

@@ -1,5 +1,14 @@
 import mongoose from "mongoose";
 
+
+interface IAvatar {
+    _id: string;
+    uuid: string;
+    avatar: [
+        {categoryName: string,parts: Array<String>}
+    ]
+}
+
 const avatarPartsSchema = new mongoose.Schema({
     categoryName: String,
     parts: [String]
@@ -11,7 +20,7 @@ const avatarSchema = new mongoose.Schema({
 })
 
 
-const Avatar = mongoose.model("Avatar", avatarSchema);
+const Avatar = mongoose.model<IAvatar & mongoose.Document>("Avatar", avatarSchema);
 
 export default Avatar;
 
