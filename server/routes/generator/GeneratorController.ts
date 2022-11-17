@@ -1,7 +1,15 @@
 import { Router, Request, Response } from 'express';
 import AvatarModel from '../../models/AvatarModel'
+import img2base64 from '../../utility/img2base64';
 import generateUUID from '../../utility/UUIDgenerator';
+import path from 'path'
 
+interface IResponseAvatar{
+  name: string,
+  layers: [
+    {category: string, parts: string[]}
+  ]
+}
 
 class GeneratorController {
   public path = '/avatar';
@@ -13,14 +21,52 @@ class GeneratorController {
  
   public intializeRoutes() {
     this.router.get(`${this.path}/:id`, this.getAvatar);
+    this.router.get(`/dummydata`, this.dummyPopo);
     // this.router.post(this.path, this.createAPost);
   }
   
   private getAvatar = async (request: Request, response: Response) =>{
     const {id} = request.params;
-    const avatar = await AvatarModel.find({uuid: id})
+    const avatar = await AvatarModel.findOne({uuid: id})
+
+    if(avatar === null) return response.send({message:"not found"})
+
+    // @ts-ignore
+    let responseAvatar: IResponseAvatar = {name:"DEVELOPMENT NAME", layers:[]}
     
+    avatar?.layers.forEach(layerInfo =>{
+      const StoragePath = path.join(__dirname, '..', '..', '..', 'avatars', avatar.uuid)
+
+      const partsBase64 = layerInfo.parts.map(part => img2base64(`${StoragePath}/${part}.png`))
+      responseAvatar.layers.push({category:layerInfo.categoryName, parts:[...partsBase64]})
+    })
+    
+    response.send(responseAvatar)
   }
+
+  
+private dummyPopo = async (request: Request, response: Response) =>{
+  const avatar = new AvatarModel({
+    uuid: 'DEV_IMGS',
+    layers:[
+      {
+        categoryName: 'body',
+        parts:['body']
+      },
+      {
+        categoryName: 'eyes',
+        parts:['eyes1', 'eyes2']
+      },
+      {
+        categoryName: 'mouth',
+        parts:['mouth1', 'mouth2']
+      }
+    ]
+  })
+
+  await avatar.save()
+  response.send({msg:"succesefule"})
+}
 
 }
  

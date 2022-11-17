@@ -30,14 +30,14 @@ class App {
         this.app.use(bodyParser.json())
     }
 
-    private async connectToDatabase() {
+    private connectToDatabase() {
         const {
             MONGO_USER,
             MONGO_PASSWORD,
             MONGO_PATH,
         } = process.env;
         
-        await mongoose.connect(`mongodb://${MONGO_USER}:${MONGO_PASSWORD}@127.0.0.1:27018/${MONGO_PATH}`).then(() => console.log("MongoDB connected"));
+        mongoose.connect(`mongodb://${MONGO_USER}:${MONGO_PASSWORD}@127.0.0.1:27018/${MONGO_PATH}`).then(() => console.log("MongoDB connected"));
     }
 
     public listen() {
@@ -47,14 +47,3 @@ class App {
 }
 
 export default App;
-
-// TODO \/ better db connection
-// const {
-//     MONGO_USER,
-//     MONGO_PASSWORD,
-//     MONGO_PATH,
-//   } = process.env;
-
-// console.log(MONGO_USER);
-// console.log(MONGO_PASSWORD);
-// console.log(MONGO_PATH);

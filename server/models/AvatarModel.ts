@@ -4,19 +4,19 @@ import mongoose from "mongoose";
 interface IAvatar {
     _id: string;
     uuid: string;
-    avatar: [
-        {categoryName: string,parts: Array<String>}
+    layers: [
+        {categoryName: string,parts: string[]}
     ]
 }
 
-const avatarPartsSchema = new mongoose.Schema({
+const avatarLayersSchema = new mongoose.Schema({
     categoryName: String,
     parts: [String]
 })
 
 const avatarSchema = new mongoose.Schema({
     uuid: String,
-    avatar: [avatarPartsSchema],
+    layers: [avatarLayersSchema],
 })
 
 
