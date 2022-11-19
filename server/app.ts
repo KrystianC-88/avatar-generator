@@ -1,7 +1,7 @@
 import express, { Application, Express, Request, Response } from 'express';
 import mongoose from 'mongoose'
 import bodyParser from 'body-parser';
-
+import cors from 'cors'
 import dotenv from 'dotenv';
 
 dotenv.config({ path: '../.env' });
@@ -28,6 +28,8 @@ class App {
 
     private initalizeMiddlewares() {
         this.app.use(bodyParser.json())
+        this.app.use(cors())
+
     }
 
     private connectToDatabase() {
