@@ -1,29 +1,32 @@
 import React, {useEffect, useLayoutEffect, useRef} from 'react'
 import useQuery from 'react-query'
-import {ILayer} from '../interfaces/avatarInterface'
+import {IAvatar} from '../interfaces/avatarInterface'
 
-function AvatarCanvas(layers: string[]){
+interface props{
+    layers: string[]
+}
 
-
-    
+function AvatarCanvas({layers}: props){
     
     const canvasRef = useRef<HTMLCanvasElement>();
-    
+
     useEffect(()=>{
         const canvasFunc = async () => {
             
             const context = canvasRef.current?.getContext('2d');     
             context?.clearRect(0, 0, context.canvas?.width, context.canvas?.height);
 
-            const AVATAR = layers.map(av => {
+            
+            
+            const AVATAR: HTMLImageElement[] = layers.map(layer => {
                 const img = new Image()
-                img.src = `data:image/png;base64,${av}`
+                img.src = `data:image/png;base64,${layer}`
                 return img
             })
             
-            AVATAR.forEach(part =>{
-                part.onload = () =>{
-                    context?.drawImage(part, 0, 0, context.canvas.width, context.canvas.height);
+            AVATAR.forEach(layer =>{
+                layer.onload = () =>{
+                    context?.drawImage(layer, 0, 0, context.canvas.width, context.canvas.height);
                 }
             })
             
