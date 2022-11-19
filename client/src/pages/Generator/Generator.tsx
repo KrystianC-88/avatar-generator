@@ -45,7 +45,7 @@ function Generator() {
                     <h1>{avatarTitle}</h1>
 
                     <AvatarCanvas layers={chosenLayers} />
-                    <AvatarControlls />
+                    <AvatarControlls avatarLayers={avatarLayers} currentLayers={chosenLayers}/>
                 </>
             ) :
                 <>
