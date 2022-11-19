@@ -1,30 +1,40 @@
-import React from 'react'
-import AvatarCanvas from '../../components/AvatarCanvas'
+import React, { useState } from 'react'
 import { fetchAvatar } from '../../fetchers/avatarFetcher'
 import { useQuery } from 'react-query'
 import { IAvatar, ILayer} from '../../interfaces/avatarInterface'
 
+// components
+import AvatarCanvas from '../../components/AvatarCanvas'
+import AvatarControlls from './AvatarControlls'
 
 
+function Generator() { 
 
-
-function Generator() {
+    const [avatarLayers, setAvatarLayers] = useState<ILayer[] | undefined>();
+    const [chosenLayers, setChosenLayers] = useState<string[] | undefined>();
 
     const TEMP_AVATARID = "DEV_IMGS"
     const { isLoading, isSuccess, isError, data, error } =
         useQuery<IAvatar, Error>('query-getavatar', async () => {
             return await fetchAvatar(TEMP_AVATARID)
-        }, { retry: 2, staleTime: 60000, });
+        }, { retry: 2, staleTime: 60000, 
+            onSuccess:() =>{
+                setAvatarLayers(data?.layers)
+        } 
+    });
 
 
-    const name = data?.name
-    console.log(name);
+    const avatarTitle = data?.name
+
+
     return (
         <>
             {isSuccess ? (
                 <>
-                    <h1>{name}</h1>
-                    <AvatarCanvas {...data?.layers} />
+                    <h1>{avatarTitle}</h1>
+                    <AvatarCanvas {...chosenLayers} />
+                    <AvatarControlls />
+                    {console.log({avatarLayers})}
                 </>
             ) :
                 <>
