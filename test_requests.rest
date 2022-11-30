@@ -1,0 +1,7 @@
+GET http://localhost:4000/dummydata
+
+###
+
+GET http://localhost:4000/avatar/DEV_IMGS
+###
+GET http://localhost:4000/avatar/notFound

@@ -1,0 +1,15 @@
+{
+    "parts":{
+        "body":[
+            "./body.png"
+        ],
+        "mouth": [
+            "./mouth1.png",
+            "./mouth2.png"
+        ],
+        "eyes":[
+            "./eyes1.png",
+            "./eyes2.png"
+        ]
+    }
+}
