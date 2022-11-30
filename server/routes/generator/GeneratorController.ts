@@ -4,12 +4,15 @@ import img2base64 from '../../utility/img2base64';
 import generateUUID from '../../utility/UUIDgenerator';
 import path from 'path'
 
-interface IResponseAvatar{
+interface IResponseAvatar {
   name: string,
   layers: [
-    {category: string, parts: string[]}
+    {
+      category: string, parts:{img: string, isChosen: boolean}[]
+    }
   ]
 }
+
 
 class GeneratorController {
   public path = '/avatar';
@@ -21,7 +24,7 @@ class GeneratorController {
  
   public intializeRoutes() {
     this.router.get(`${this.path}/:id`, this.getAvatar);
-    this.router.get(`/dummydata`, this.dummyPopo);
+    // this.router.get(`/dummydata`, this.dummyPopo);
     // this.router.post(this.path, this.createAPost);
   }
   
@@ -37,7 +40,14 @@ class GeneratorController {
     avatar?.layers.forEach(layerInfo =>{
       const StoragePath = path.join(__dirname, '..', '..', '..', 'avatars', avatar.uuid)
 
-      const partsBase64 = layerInfo.parts.map(part => img2base64(`${StoragePath}/${part}.png`))
+      
+      let index = -1;
+      const partsBase64 = layerInfo.parts.map(part => {
+        const img = 'data:image/png;base64,'+img2base64(`${StoragePath}/${part}.png`)
+        index++
+        return {img: img, isChosen: index == 0 ? true : false}
+      })
+      
       responseAvatar.layers.push({category:layerInfo.categoryName, parts:[...partsBase64]})
     })
     
@@ -45,28 +55,28 @@ class GeneratorController {
   }
 
   
-private dummyPopo = async (request: Request, response: Response) =>{
-  const avatar = new AvatarModel({
-    uuid: 'DEV_IMGS',
-    layers:[
-      {
-        categoryName: 'body',
-        parts:['body']
-      },
-      {
-        categoryName: 'eyes',
-        parts:['eyes1', 'eyes2']
-      },
-      {
-        categoryName: 'mouth',
-        parts:['mouth1', 'mouth2']
-      }
-    ]
-  })
+// private dummyPopo = async (request: Request, response: Response) =>{
+//   const avatar = new AvatarModel({
+//     uuid: 'DEV_IMGS',
+//     layers:[
+//       {
+//         categoryName: 'body',
+//         parts:['body']
+//       },
+//       {
+//         categoryName: 'eyes',
+//         parts:['eyes1', 'eyes2']
+//       },
+//       {
+//         categoryName: 'mouth',
+//         parts:['mouth1', 'mouth2']
+//       }
+//     ]
+//   })
 
-  await avatar.save()
-  response.send({msg:"succesefule"})
-}
+//   await avatar.save()
+//   response.send({msg:"succesefule"})
+// }
 
 }
  

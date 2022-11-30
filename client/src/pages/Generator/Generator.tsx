@@ -5,20 +5,18 @@ import { IAvatar, ILayer } from '../../interfaces/avatarInterface'
 
 // components
 import AvatarCanvas from '../../components/AvatarCanvas'
-import AvatarControlls from './AvatarControlls'
 
-const defaultLayers = (layers: ILayer[]) =>{
-    const defaultAvatar: string[] = layers.map(layer => layer.parts[0])
-    return defaultAvatar
-}
+import AvatarControlls from './components/AvatarControlls'
+import getChosenLayers from '../../utility/getChosenLayers'
+
+
 
 function Generator() {
 
     const [avatarLayers, setAvatarLayers] = useState<ILayer[]>([]);
-    const [chosenLayers, setChosenLayers] = useState<string[]>([]);
 
 
-    
+
     const TEMP_AVATARID = "DEV_IMGS"
     const { isLoading, isSuccess, isError, data, error } =
         useQuery<IAvatar, Error>('query-getavatar', async () => {
@@ -27,16 +25,18 @@ function Generator() {
             retry: 2, staleTime: 60000,
             onSuccess: (res: IAvatar) => {
                 setAvatarLayers(prev => res.layers)
-                setChosenLayers(prev => defaultLayers(res.layers))
+
             }
         });
 
-
-    const avatarTitle = data?.name
     
-    const ChosenLayersHandler = (parts: any) => {
-
+    const ChosenLayersHandler = (newAvatarLayers: ILayer[]) => {
+        setAvatarLayers(prev => newAvatarLayers)
     }
+
+    
+    const avatarTitle = data?.name
+    const chosenLayers = getChosenLayers(avatarLayers)
 
     return (
         <>
@@ -45,7 +45,9 @@ function Generator() {
                     <h1>{avatarTitle}</h1>
 
                     <AvatarCanvas layers={chosenLayers} />
-                    <AvatarControlls avatarLayers={avatarLayers} currentLayers={chosenLayers}/>
+
+                    <AvatarControlls avatarLayers={avatarLayers} updateCurrentLayers={ChosenLayersHandler}/>
+
                 </>
             ) :
                 <>
