@@ -24,7 +24,7 @@ class GeneratorController {
  
   public intializeRoutes() {
     this.router.get(`${this.path}/:id`, this.getAvatar);
-    this.router.get(`/dummydata`, this.dummyPopo);
+    // this.router.get(`/dummydata`, this.dummyPopo);
     // this.router.post(this.path, this.createAPost);
   }
   
@@ -55,28 +55,28 @@ class GeneratorController {
   }
 
   
-private dummyPopo = async (request: Request, response: Response) =>{
-  const avatar = new AvatarModel({
-    uuid: 'DEV_IMGS',
-    layers:[
-      {
-        categoryName: 'body',
-        parts:['body']
-      },
-      {
-        categoryName: 'eyes',
-        parts:['eyes1', 'eyes2']
-      },
-      {
-        categoryName: 'mouth',
-        parts:['mouth1', 'mouth2']
-      }
-    ]
-  })
+// private dummyPopo = async (request: Request, response: Response) =>{
+//   const avatar = new AvatarModel({
+//     uuid: 'DEV_IMGS',
+//     layers:[
+//       {
+//         categoryName: 'body',
+//         parts:['body']
+//       },
+//       {
+//         categoryName: 'eyes',
+//         parts:['eyes1', 'eyes2']
+//       },
+//       {
+//         categoryName: 'mouth',
+//         parts:['mouth1', 'mouth2']
+//       }
+//     ]
+//   })
 
-  await avatar.save()
-  response.send({msg:"succesefule"})
-}
+//   await avatar.save()
+//   response.send({msg:"succesefule"})
+// }
 
 }
  
