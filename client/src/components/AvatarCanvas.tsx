@@ -8,7 +8,7 @@ interface props{
 
 function AvatarCanvas({layers}: props){
     
-
+    
     console.log("Rerender")
     console.log({layers})
     const canvasRef = useRef<HTMLCanvasElement>();

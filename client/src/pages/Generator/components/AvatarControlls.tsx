@@ -11,18 +11,16 @@ interface props {
 function AvatarControlls({ avatarLayers, updateCurrentLayers }: props) {
 
     const handleChange = (part: IPart) => {
-        console.log(`AvatarControlls event`)
         const tempAvatarLayers = [...avatarLayers]
 
         tempAvatarLayers.forEach(layer =>{
             const currentlyChosen = layer.parts.find(part => part.isChosen === true)
-            console.log(`${layer.category} category of currentlyChosen part`)
             const PartToChange = layer.parts.find(currPart => currPart === part)
             if(PartToChange === undefined) return;
             
-            //@ts-ignore
+            // @ts-ignore
             currentlyChosen.isChosen = false
-            //@ts-ignore
+            
             PartToChange.isChosen = true
         })
 
