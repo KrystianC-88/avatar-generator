@@ -8,9 +8,7 @@ interface props{
 
 function AvatarCanvas({layers}: props){
     
-    
-    console.log("Rerender")
-    console.log({layers})
+
     const canvasRef = useRef<HTMLCanvasElement>();
 
     useEffect(()=>{
@@ -23,7 +21,9 @@ function AvatarCanvas({layers}: props){
             
             const AVATAR: HTMLImageElement[] = layers.map(layer => {
                 const img = new Image()
+
                 img.src = `${layer}`
+
                 return img
             })
             
