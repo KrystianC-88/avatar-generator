@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { fetchAvatar } from '../../fetchers/avatarFetcher'
 import { useQuery } from 'react-query'
 import { IAvatar, ILayer } from '../../interfaces/avatarInterface'
@@ -6,13 +6,11 @@ import { IAvatar, ILayer } from '../../interfaces/avatarInterface'
 // components
 import AvatarCanvas from '../../components/AvatarCanvas'
 import AvatarControlls from './components/AvatarControlls'
-import getChosenLayers from '../../utility/getChosenLayers'
-
-
 
 function Generator() {
 
     const [avatarLayers, setAvatarLayers] = useState<ILayer[]>([]);
+    const [chosenLayers, setChosenLayers] = useState<string[]>([]); // list of img<base64> of chosen parts
 
     const TEMP_AVATARID = "DEV_IMGS"
     const { isLoading, isSuccess, isError, data, error } =
@@ -25,21 +23,31 @@ function Generator() {
             }
         });
 
-    
-    const ChosenLayersHandler = (newAvatarLayers: ILayer[]) => {
-        setAvatarLayers(prev => newAvatarLayers)
-    }
+    const ChosenLayersHandler = (newAvatarLayers: ILayer[]) => {setAvatarLayers(prev => newAvatarLayers)}
 
+    const generateChosenLayers = () => {
+        const Layers = [...avatarLayers];
+
+        let newChosenLayers: string[] = [];
+        Layers.forEach(layer =>{
+            const chosenPart = layer.parts.find(part => part.isChosen === true);
+            if(chosenPart !== undefined) newChosenLayers.push(chosenPart.img)
+        })
+        console.log({newChosenLayers})
+        console.warn("new chosen layers");
+        setChosenLayers(prev => newChosenLayers);
+    }
+    useEffect(generateChosenLayers, [avatarLayers])
     
     const avatarTitle = data?.name
-    const chosenLayers = getChosenLayers(avatarLayers)
+    
     return (
         <>
             {isSuccess ? (
                 <>
                     <h1>{avatarTitle}</h1>
 
-                    <AvatarCanvas layers={chosenLayers} />
+                    <AvatarCanvas layersIMG={[...chosenLayers]} />
                     <AvatarControlls avatarLayers={avatarLayers} updateCurrentLayers={ChosenLayersHandler}/>
                 </>
             ) :

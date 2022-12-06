@@ -1,43 +1,29 @@
 import React, {useEffect, useLayoutEffect, useRef} from 'react'
 import useQuery from 'react-query'
 import {IAvatar} from '../interfaces/avatarInterface'
+import generateImageElement from '../utility/generateImageElement';
 
 interface props{
-    layers: string[]
+    layersIMG: string[]
 }
 
-function AvatarCanvas({layers}: props){
-    
-    
-    console.log("Rerender")
-    console.log({layers})
+function AvatarCanvas({layersIMG}: props){
+    console.warn("reload")
     const canvasRef = useRef<HTMLCanvasElement>();
 
-    useEffect(()=>{
-        const canvasFunc = async () => {
-            
-            const context = canvasRef.current?.getContext('2d');     
-            context?.clearRect(0, 0, context.canvas?.width, context.canvas?.height);
-
-            
-            
-            const AVATAR: HTMLImageElement[] = layers.map(layer => {
-                const img = new Image()
-                img.src = `${layer}`
-                return img
-            })
-            
-            AVATAR.forEach(layer =>{
-                layer.onload = () =>{
-                    context?.drawImage(layer, 0, 0, context.canvas.width, context.canvas.height);
-                }
-            })
-            
-        }
-
-        canvasFunc()
+    const canvasDrawImages =  () => {  
+        const context = canvasRef.current?.getContext('2d');     
+        context?.clearRect(0, 0, context.canvas?.width, context.canvas?.height);
         
-    },[])
+        const AVATAR: HTMLImageElement[] = layersIMG.map(layer => generateImageElement(layer))
+        
+        AVATAR.forEach(layer =>{
+            context?.drawImage(layer, 0, 0, context.canvas.width, context.canvas.height);}
+        )        
+        
+    }
+
+    canvasDrawImages();
 
 
     return(
